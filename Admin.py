@@ -31,13 +31,23 @@ report_options = {
 report_choice = st.selectbox("Seleziona il report da aggiornare", list(report_options.keys()))
 selected_file_path = report_options[report_choice]
 
+# Mostra il nome corretto richiesto
+st.info(f"⚠️ Il file da caricare deve essere chiamato esattamente: **{selected_file_path}**")
+
 uploaded_file = st.file_uploader("Carica il nuovo file Excel (.xlsx)", type=["xlsx"])
 
 if uploaded_file:
+    uploaded_filename = uploaded_file.name
+    valid_filenames = list(report_options.values())
+
+    if uploaded_filename != selected_file_path:
+        st.error(f"❌ Nome file non valido. Hai caricato '{uploaded_filename}', ma è richiesto '{selected_file_path}'.")
+        st.stop()
+
     try:
         df_new = pd.read_excel(uploaded_file)
         df_new.to_excel(selected_file_path, index=False)
-        st.success(f"File '{selected_file_path}' aggiornato con successo!")
+        st.success(f"✅ File '{selected_file_path}' aggiornato con successo!")
         st.dataframe(df_new.head(), use_container_width=True)
     except Exception as e:
         st.error(f"Errore durante l'upload del file: {e}")
