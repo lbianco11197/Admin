@@ -23,7 +23,7 @@ st.success(f"Benvenuto {username}! Seleziona il file da aggiornare.")
 # Dizionario dei report disponibili
 report_options = {
     "Delivery TIM": "delivery.xlsx",
-    "Assurance TIM": "impulsiva.xlsx",
+    "Assurance TIM": "assurance.xlsx",
     "Delivery Open Fiber": "deliveryopenfiber.xlsx",
     "Assurance Open Fiber": "assuranceopenfiber.xlsx"
 }
