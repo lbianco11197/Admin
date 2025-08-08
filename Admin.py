@@ -4,6 +4,30 @@ import pandas as pd
 import os
 
 st.set_page_config(layout="wide")
+
+# Imposta sfondo bianco e testo nero
+st.markdown(
+    """
+    <style>
+        html, body, [data-testid="stApp"] {
+            background-color: white !important;
+            color: black !important;
+        }
+        .stTextInput input, .stPasswordInput input, .stSelectbox, .stFileUploader, .stButton {
+            color: black !important;
+            background-color: white !important;
+        }
+        .stMarkdown, .stDataFrame, .stAlert {
+            color: black !important;
+        }
+        .css-1d391kg {  /* Titolo */
+            color: black !important;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.image("LogoEuroirte.jpg", width=150)
 st.title("Gestione File Report - Euroirte s.r.l.")
 
