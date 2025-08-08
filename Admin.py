@@ -69,10 +69,7 @@ def upload_to_github(repo, path_in_repo, file_data, commit_message):
 
     put_resp = requests.put(get_url, headers=headers, json=data)
 
-    if response.status_code == 200:
-    st.success("✅ File caricato e aggiornato correttamente su GitHub.")
-else:
-    st.error("❌ Errore durante l'upload su GitHub.")
+    
 
     return put_resp.status_code in [200, 201]
 
