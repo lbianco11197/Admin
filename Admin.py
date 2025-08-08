@@ -69,7 +69,6 @@ def upload_to_github(repo, path_in_repo, file_data, commit_message):
 
     put_resp = requests.put(get_url, headers=headers, json=data)
 
-    
 
     return put_resp.status_code in [200, 201]
 
