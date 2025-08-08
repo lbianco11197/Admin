@@ -65,8 +65,16 @@ button[kind="primary"]:hover, button[kind="secondary"]:hover, .stButton > button
 </style>
 """, unsafe_allow_html=True)
 
-st.image("LogoEuroirte.jpg", width=150)
+# --- Titolo ---
 st.title("Gestione File Report - Euroirte s.r.l.")
+
+# Intestazione con logo e bottone
+# Logo in alto
+st.image("LogoEuroirte.jpg", width=180)
+
+# Bottone sotto il logo
+st.link_button("🏠 Torna alla Home", url="https://homeeuroirte.streamlit.app/")
+
 
 # Autenticazione semplice
 utenti_autorizzati = ["lbianco", "acapizzi", "gcassarino"]
