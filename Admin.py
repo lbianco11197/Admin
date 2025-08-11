@@ -94,7 +94,7 @@ st.success(f"Benvenuto {username}! Seleziona il file da aggiornare.")
 report_options = {
     "Delivery TIM": ("delivery.xlsx", "lbianco11197/Avanzamento-Delivery"),
     "Assurance TIM": ("assurance.xlsx", "lbianco11197/Avanzamento-Impulsiva-v2"),
-    "Delivery Open Fiber": ("deliveryopenfiber.xlsx", None),
+    "Delivery Open Fiber": ("deliveryopenfiber.xlsx", "lbianco11197/Avanzamento-Delivery-OF"),
 }
 
 report_choice = st.selectbox("Seleziona il report da aggiornare", list(report_options.keys()))
