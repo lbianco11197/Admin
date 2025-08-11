@@ -95,7 +95,7 @@ report_options = {
     "Delivery TIM": ("delivery.xlsx", "lbianco11197/Avanzamento-Delivery"),
     "Assurance TIM": ("assurance.xlsx", "lbianco11197/Avanzamento-Impulsiva-v2"),
     "Delivery Open Fiber": ("deliveryopenfiber.xlsx", None),
-    "Assurance Open Fiber": ("assuranceopenfiber.xlsx", None)
+    #"Assurance Open Fiber": ("assuranceopenfiber.xlsx", None)
 }
 
 report_choice = st.selectbox("Seleziona il report da aggiornare", list(report_options.keys()))
