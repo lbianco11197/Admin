@@ -63,11 +63,13 @@ def upload_to_github(repo, path_in_repo, file_data, commit_message, branch="main
 # --- HEADER ---
 st.image("LogoEuroirte.jpg", width=180)
 st.link_button("🏠 Torna alla Home", url="https://homeeuroirte.streamlit.app/")
-st.title("Gestione File Report - Euroirte s.r.l.")
 
 # --- Nuovo titolo e pulsante per avanzamento economico ---
-st.markdown("## Verifica l'avanzamento economico")
+st.title("## Verifica l'avanzamento economico")
 st.link_button("💶 Vai al Report Economico", "https://avanzamento-economico.streamlit.app/")
+
+st.title("Gestione File Report - Euroirte s.r.l.")
+
 
 # --- LOGIN ---
 utenti_autorizzati = ["lbianco", "acapizzi", "gcassarino"]
