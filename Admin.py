@@ -65,6 +65,10 @@ st.image("LogoEuroirte.jpg", width=180)
 st.link_button("🏠 Torna alla Home", url="https://homeeuroirte.streamlit.app/")
 st.title("Gestione File Report - Euroirte s.r.l.")
 
+# --- Nuovo titolo e pulsante per avanzamento economico ---
+st.markdown("## Verifica l'avanzamento economico")
+st.link_button("💶 Vai al Report Economico", "https://avanzamento-economico.streamlit.app/")
+
 # --- LOGIN ---
 utenti_autorizzati = ["lbianco", "acapizzi", "gcassarino"]
 password_corretta = "Euroirte111927"
@@ -78,9 +82,6 @@ if username not in utenti_autorizzati or password != password_corretta:
 
 st.success(f"Benvenuto {username}! Seleziona il file da aggiornare.")
 
-# --- Nuovo titolo e pulsante per avanzamento economico ---
-st.markdown("## Verifica l'avanzamento economico")
-st.link_button("💶 Vai al Report Economico", "https://avanzamento-economico.streamlit.app/")
 
 # --- MAPPATURA REPORT ---
 report_options = {
