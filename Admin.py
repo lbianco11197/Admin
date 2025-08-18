@@ -78,6 +78,10 @@ if username not in utenti_autorizzati or password != password_corretta:
 
 st.success(f"Benvenuto {username}! Seleziona il file da aggiornare.")
 
+# --- Nuovo titolo e pulsante per avanzamento economico ---
+st.markdown("## Verifica l'avanzamento economico")
+st.link_button("💶 Vai al Report Economico", "https://avanzamento-economico.streamlit.app/")
+
 # --- MAPPATURA REPORT ---
 report_options = {
     "Delivery TIM": ("delivery.xlsx", "lbianco11197/Avanzamento-Delivery"),
