@@ -68,7 +68,7 @@ st.link_button("🏠 Torna alla Home", url="https://homeeuroirte.streamlit.app/"
 st.title("Verifica l'avanzamento economico")
 st.link_button("💶 Vai al Report Economico", "https://avanzamento-economico.streamlit.app/")
 
-st.title("Gestione")
+st.title("Gestione file")
 
 
 # --- LOGIN ---
