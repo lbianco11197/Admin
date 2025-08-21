@@ -23,48 +23,86 @@ button[kind="primary"]:hover, button[kind="secondary"]:hover, .stButton > button
 """, unsafe_allow_html=True)
 
 # --- FUNZIONE UPLOAD GITHUB (create/update) ---
-def upload_to_github(repo, path_in_repo, file_data, commit_message, branch="main"):
-    """
-    Carica o aggiorna (sovrascrive) un file su GitHub tramite API v3.
-    Se il file esiste, recupera lo SHA e fa l'update; altrimenti crea.
-    """
-    # accetta sia 'github_token' che 'GITHUB_TOKEN'
-    token = st.secrets.get("github_token") or st.secrets.get("GITHUB_TOKEN")
-    if not token:
-        st.error("❌ Secret GitHub mancante. Aggiungi 'github_token' o 'GITHUB_TOKEN' nei Secrets.")
-        return False
+def _get_token():
+    return st.secrets.get("github_token") or st.secrets.get("GITHUB_TOKEN")
 
-    headers = {
+def _gh_headers(token: str):
+    return {
         "Authorization": f"token {token}",
         "Accept": "application/vnd.github+json",
-        "User-Agent": "streamlit-admin"
+        "User-Agent": "streamlit-admin",
     }
-    api_url = f"https://api.github.com/repos/{repo}/contents/{path_in_repo}"
 
-    # Controlla se esiste per recuperare lo SHA
-    sha = None
-    get_resp = requests.get(api_url, headers=headers, params={"ref": branch}, timeout=30)
-    if get_resp.status_code == 200:
-        sha = get_resp.json().get("sha")
-    elif get_resp.status_code not in (404,):
-        st.error(f"❌ Errore nel controllo esistenza file: {get_resp.json().get('message','')}")
-        return False
+def _get_default_branch(repo: str, token: str) -> str | None:
+    r = requests.get(f"https://api.github.com/repos/{repo}",
+                     headers=_gh_headers(token), timeout=30)
+    if r.status_code == 200:
+        return r.json().get("default_branch", "main")
+    return None
 
-    encoded = base64.b64encode(file_data).decode("utf-8")
-    payload = {"message": commit_message, "content": encoded, "branch": branch}
-    if sha:  # update (sovrascrive)
+def _get_current_sha(repo: str, path_in_repo: str, branch: str, token: str) -> str | None:
+    r = requests.get(
+        f"https://api.github.com/repos/{repo}/contents/{path_in_repo}",
+        headers=_gh_headers(token),
+        params={"ref": branch},
+        timeout=30,
+    )
+    if r.status_code == 200:
+        return r.json().get("sha")
+    if r.status_code == 404:
+        return None
+    # altro errore
+    raise RuntimeError(f"GET contents fallito: {r.status_code} – {r.json().get('message','')}")
+
+def upload_to_github(repo: str, path_in_repo: str, file_data: bytes,
+                     commit_message: str, branch: str | None = None) -> tuple[bool, str | None]:
+    """
+    Crea/Aggiorna un file nel repo indicato.
+    Ritorna (ok, commit_html_url|msg_errore).
+    - Se branch è None, usa il default branch del repo.
+    """
+    token = _get_token()
+    if not token:
+        return (False, "Secret GitHub mancante (github_token / GITHUB_TOKEN).")
+
+    # 1) Scopri il branch corretto
+    if branch is None:
+        branch = _get_default_branch(repo, token)
+        if not branch:
+            return (False, "Impossibile leggere il default branch del repository.")
+
+    # 2) Recupera lo SHA se il file esiste su quel branch
+    try:
+        sha = _get_current_sha(repo, path_in_repo, branch, token)
+    except Exception as e:
+        return (False, str(e))
+
+    # 3) PUT contenuti
+    url = f"https://api.github.com/repos/{repo}/contents/{path_in_repo}"
+    payload = {
+        "message": commit_message,
+        "content": base64.b64encode(file_data).decode("utf-8"),
+        "branch": branch,
+    }
+    if sha:
         payload["sha"] = sha
 
-    put_resp = requests.put(api_url, headers=headers, json=payload, timeout=30)
-    if put_resp.status_code in (200, 201):
-        return True
+    r = requests.put(url, headers=_gh_headers(token), json=payload, timeout=30)
+
+    if r.status_code in (200, 201):
+        data = r.json()
+        # alcune risposte includono il commit HTML URL
+        commit_url = None
+        if isinstance(data, dict):
+            commit = data.get("commit") or {}
+            commit_url = commit.get("html_url")
+        return (True, commit_url or f"Commit su branch '{branch}' eseguito.")
     else:
         try:
-            msg = put_resp.json().get("message", "")
+            msg = r.json().get("message", "")
         except Exception:
-            msg = str(put_resp.text)
-        st.error(f"❌ Errore GitHub: {put_resp.status_code} — {msg}")
-        return False
+            msg = r.text
+        return (False, f"{r.status_code} – {msg}")
 
 # --- HEADER ---
 st.image("LogoEuroirte.jpg", width=180)
