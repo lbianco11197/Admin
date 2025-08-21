@@ -163,18 +163,21 @@ if uploaded_file:
             df_preview = pd.read_excel(uploaded_file)  # solo preview
             excel_bytes = uploaded_file.getvalue()
 
-            ok = upload_to_github(
+            ok, info = upload_to_github(
                 repo=github_repo,
                 path_in_repo=selected_file_name,
                 file_data=excel_bytes,
                 commit_message=f"Aggiornato {selected_file_name} da {username} via Streamlit",
-                branch="main"
+                branch=None,  # usa il default branch auto (main/master/altro)
             )
             if ok:
-                st.success(f"✅ File '{selected_file_name}' aggiornato/sovrascritto su GitHub: {github_repo}")
+                st.success("✅ File aggiornato sul repository.")
+                if info:
+                    st.markdown(f"**Commit:** {info}")
             else:
-                st.error("❌ Errore durante l'aggiornamento del file su GitHub.")
-
+                st.error(f"❌ Upload fallito: {info}")
+            
+            
             st.markdown("**Anteprima (prime righe):**")
             st.dataframe(df_preview.head(20), use_container_width=True)
 
