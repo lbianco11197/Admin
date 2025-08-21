@@ -93,7 +93,7 @@ st.success(f"Benvenuto {username}! Seleziona il file da aggiornare.")
 #  nuovo: "Giacenza guasti TIM" -> carica 'giacenza.xlsx' sul repo Avanzamento-Impulsiva-v2
 report_options = {
     "Delivery TIM": ("delivery.xlsx", "lbianco11197/Avanzamento-Delivery"),
-    "Assurance TIM": ("assurance.xlsx", "lbianco11197/Avanzamento-Impulsiva-v2"),
+    "Rework/PD": ("reworkpd.xlsx", "lbianco11197/Avanzamento-Impulsiva-v2"),
     "Giacenza guasti TIM": ("giacenza.xlsx", "lbianco11197/Avanzamento-Impulsiva-v2"),
     "Delivery Open Fiber": ("deliveryopenfiber.xlsx", "lbianco11197/Avanzamento-Delivery-OF"),
     "Avanzamento Economico": ("Avanzamento.xlsx", "lbianco11197/Avanzamento-economico"),
@@ -133,7 +133,7 @@ if uploaded_file:
                 branch="main"
             )
             if ok:
-                st.success(f"✅ File '{selected_file_name}' aggiornato (sovrascritto) su GitHub: {github_repo}")
+                st.success(f"✅ File '{selected_file_name}' aggiornato/sovrascritto su GitHub: {github_repo}")
             else:
                 st.error("❌ Errore durante l'aggiornamento del file su GitHub.")
 
