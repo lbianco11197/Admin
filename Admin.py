@@ -4,9 +4,6 @@ import base64
 from pathlib import Path
 import requests
 
-st.set_page_config(layout="wide")
-set_page_background("sfondo.png")  # 👈 nome del file PNG che vuoi usare come sfondo
-
 # --- STILE ---
 def set_page_background(image_path: str):
     """Imposta un'immagine di sfondo full-screen come background dell'app Streamlit."""
@@ -46,6 +43,9 @@ def set_page_background(image_path: str):
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
+
+st.set_page_config(layout="wide")
+set_page_background("sfondo.png")  # 👈 nome del file PNG che vuoi usare come sfondo
 
 # --- FUNZIONE UPLOAD GITHUB (create/update) ---
 def _get_token():
