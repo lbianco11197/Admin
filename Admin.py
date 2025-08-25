@@ -4,48 +4,54 @@ import base64
 from pathlib import Path
 import requests
 
-# --- STILE ---
+# --- SFONDO FULL-SCREEN: funzione riutilizzabile ---
 def set_page_background(image_path: str):
-    """Imposta un'immagine di sfondo full-screen come background dell'app Streamlit."""
     p = Path(image_path)
     if not p.exists():
-        st.warning(f"Background non trovato: {image_path}")
-        return
+        # tentativo robusto: cerca accanto al file corrente
+        alt = Path(__file__).parent / image_path
+        if alt.exists():
+            p = alt
+        else:
+            st.warning(f"Background non trovato: {image_path}")
+            return
+
     encoded = base64.b64encode(p.read_bytes()).decode()
     css = f"""
     <style>
-    [data-testid="stAppViewContainer"] {{
+      [data-testid="stAppViewContainer"] {{
         background: url("data:image/png;base64,{encoded}") center/cover no-repeat fixed;
-    }}
-    [data-testid="stHeader"], [data-testid="stSidebar"] {{
+      }}
+      [data-testid="stHeader"], [data-testid="stSidebar"] {{
         background-color: rgba(255,255,255,0.0) !important;
-    }}
-    html, body, [data-testid="stApp"] {{
+      }}
+      html, body, [data-testid="stApp"] {{
         color: #0b1320 !important;
-    }}
-    .stDataFrame, .stTable, .stSelectbox div[data-baseweb="select"],
-    .stTextInput, .stNumberInput, .stDateInput, .stMultiSelect,
-    .stRadio, .stCheckbox, .stSlider, .stFileUploader, .stTextArea {{
+      }}
+      .stDataFrame, .stTable, .stSelectbox div[data-baseweb="select"],
+      .stTextInput, .stNumberInput, .stDateInput, .stMultiSelect,
+      .stRadio, .stCheckbox, .stSlider, .stFileUploader, .stTextArea {{
         background-color: rgba(255,255,255,0.88) !important;
         border-radius: 10px;
         backdrop-filter: blur(0.5px);
-    }}
-    .stDataFrame table, .stDataFrame th, .stDataFrame td {{
+      }}
+      .stDataFrame table, .stDataFrame th, .stDataFrame td {{
         color: #0b1320 !important;
         background-color: rgba(255,255,255,0.0) !important;
-    }}
-    .stButton > button, .stDownloadButton > button, .stLinkButton > a {{
+      }}
+      .stButton > button, .stDownloadButton > button, .stLinkButton > a {{
         background-color: #ffffff !important;
         color: #0b1320 !important;
         border: 1px solid #cbd5e1 !important;
         border-radius: 8px;
-    }}
+      }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
 
+# --- CONFIG PAGINA + SFONDO ---
 st.set_page_config(layout="wide")
-set_page_background("sfondo.png")  # 👈 nome del file PNG che vuoi usare come sfondo
+set_page_background("sfondo.png")  # <— usa il PNG dello sfondo bianco con glow
 
 # --- FUNZIONE UPLOAD GITHUB (create/update) ---
 def _get_token():
