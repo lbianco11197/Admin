@@ -105,7 +105,7 @@ def upload_to_github(repo: str, path_in_repo: str, file_data: bytes,
         return (False, f"{r.status_code} – {msg}")
 
 # --- HEADER ---
-st.image("LogoEuroirte.jpg", width=180)
+st.image("LogoEuroirte.png", width=180)
 st.link_button("🏠 Torna alla Home", url="https://homeeuroirte.streamlit.app/")
 
 # --- Nuovo titolo e pulsante per avanzamento economico ---
