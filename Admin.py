@@ -1,26 +1,51 @@
 import streamlit as st
 import pandas as pd
-import base64
+import base64 
+from pathlib import Path
 import requests
 
 st.set_page_config(layout="wide")
+set_page_background("sfondo.png")  # 👈 nome del file PNG che vuoi usare come sfondo
 
 # --- STILE ---
-st.markdown("""
-<style>
-html, body, [data-testid="stApp"] { background-color: white !important; color: black !important; }
-h1, h2, h3, h4, h5, h6, p, span, div, label { color: black !important; }
-div[data-baseweb="radio"] label { color: black !important; font-weight: 600 !important; }
-input, textarea, select { background-color: white !important; color: black !important; }
-button[kind="primary"], button[kind="secondary"], .stButton > button {
-  background-color: white !important; color: black !important; border: 1px solid #999 !important; border-radius: 6px;
-}
-button[kind="primary"]:hover, button[kind="secondary"]:hover, .stButton > button:hover {
-  background-color: #f0f0f0 !important; color: black !important;
-}
-.css-1d391kg, .stDataFrame, .css-1m3z7sd { color: black !important; background-color: white !important; }
-</style>
-""", unsafe_allow_html=True)
+def set_page_background(image_path: str):
+    """Imposta un'immagine di sfondo full-screen come background dell'app Streamlit."""
+    p = Path(image_path)
+    if not p.exists():
+        st.warning(f"Background non trovato: {image_path}")
+        return
+    encoded = base64.b64encode(p.read_bytes()).decode()
+    css = f"""
+    <style>
+    [data-testid="stAppViewContainer"] {{
+        background: url("data:image/png;base64,{encoded}") center/cover no-repeat fixed;
+    }}
+    [data-testid="stHeader"], [data-testid="stSidebar"] {{
+        background-color: rgba(255,255,255,0.0) !important;
+    }}
+    html, body, [data-testid="stApp"] {{
+        color: #0b1320 !important;
+    }}
+    .stDataFrame, .stTable, .stSelectbox div[data-baseweb="select"],
+    .stTextInput, .stNumberInput, .stDateInput, .stMultiSelect,
+    .stRadio, .stCheckbox, .stSlider, .stFileUploader, .stTextArea {{
+        background-color: rgba(255,255,255,0.88) !important;
+        border-radius: 10px;
+        backdrop-filter: blur(0.5px);
+    }}
+    .stDataFrame table, .stDataFrame th, .stDataFrame td {{
+        color: #0b1320 !important;
+        background-color: rgba(255,255,255,0.0) !important;
+    }}
+    .stButton > button, .stDownloadButton > button, .stLinkButton > a {{
+        background-color: #ffffff !important;
+        color: #0b1320 !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px;
+    }}
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
 
 # --- FUNZIONE UPLOAD GITHUB (create/update) ---
 def _get_token():
