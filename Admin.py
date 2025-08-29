@@ -6,9 +6,9 @@ import requests
 
 # --- SFONDO FULL-SCREEN: funzione riutilizzabile ---
 def set_page_background(image_path: str):
+    """Imposta un'immagine di sfondo full-screen come background dell'app Streamlit."""
     p = Path(image_path)
     if not p.exists():
-        # tentativo robusto: cerca accanto al file corrente
         alt = Path(__file__).parent / image_path
         if alt.exists():
             p = alt
@@ -19,32 +19,46 @@ def set_page_background(image_path: str):
     encoded = base64.b64encode(p.read_bytes()).decode()
     css = f"""
     <style>
-      [data-testid="stAppViewContainer"] {{
+    [data-testid="stAppViewContainer"] {{
         background: url("data:image/png;base64,{encoded}") center/cover no-repeat fixed;
-      }}
-      [data-testid="stHeader"], [data-testid="stSidebar"] {{
+    }}
+    [data-testid="stHeader"], [data-testid="stSidebar"] {{
         background-color: rgba(255,255,255,0.0) !important;
-      }}
-      html, body, [data-testid="stApp"] {{
+    }}
+    html, body, [data-testid="stApp"] {{
         color: #0b1320 !important;
-      }}
-      .stDataFrame, .stTable, .stSelectbox div[data-baseweb="select"],
-      .stTextInput, .stNumberInput, .stDateInput, .stMultiSelect,
-      .stRadio, .stCheckbox, .stSlider, .stFileUploader, .stTextArea {{
+    }}
+
+    /* INPUT con bordo grigio chiaro */
+    .stDataFrame, .stTable, .stSelectbox div[data-baseweb="select"],
+    .stTextInput, .stNumberInput, .stDateInput, .stMultiSelect,
+    .stRadio, .stCheckbox, .stSlider, .stFileUploader, .stTextArea {{
         background-color: rgba(255,255,255,0.88) !important;
         border-radius: 10px;
         backdrop-filter: blur(0.5px);
-      }}
-      .stDataFrame table, .stDataFrame th, .stDataFrame td {{
+        border: 1px solid #ddd !important;   /* 👈 bordo grigio chiaro */
+    }}
+
+    .stDataFrame table, .stDataFrame th, .stDataFrame td {{
         color: #0b1320 !important;
         background-color: rgba(255,255,255,0.0) !important;
-      }}
-      .stButton > button, .stDownloadButton > button, .stLinkButton > a {{
+    }}
+
+    /* Pulsanti */
+    .stButton > button, .stDownloadButton > button, .stLinkButton > a {{
         background-color: #ffffff !important;
         color: #0b1320 !important;
-        border: 1px solid #cbd5e1 !important;
+        border: 1px solid #ddd !important;   /* 👈 bordo grigio chiaro */
         border-radius: 8px;
-      }}
+    }}
+    .stButton > button:hover, .stLinkButton > a:hover {{
+        background-color: #f3f4f6 !important;
+    }}
+
+    /* Sidebar con linea divisoria */
+    [data-testid="stSidebar"] {{
+        border-right: 2px solid #ddd !important;  /* 👈 linea grigia chiara */
+    }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
